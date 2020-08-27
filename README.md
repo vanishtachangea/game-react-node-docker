@@ -30,6 +30,16 @@ cd api
 npm start
 ```
 
+### Project Plan 
+1. Get the Initial MERN Stack folders right
+1. Api
+1. TDD
+1. Algorithm
+1. More Tests
+1. Improve Docker to add the other services. 
+1. React
+ 
+
 
 
 
