@@ -22,12 +22,13 @@ It has been proven that finding the optimal moves is a very hard computational p
 ### client 
 ```
 cd client
-npm start
+npm run build
+npm run start-dev
 ```
 ### api
 ```
 cd api
-npm start
+npm run start-dev
 ```
 
 ### Project Plan 
@@ -38,6 +39,15 @@ npm start
 1. More Tests
 1. Improve Docker to add the other services. 
 1. React
+
+### Detailed Tasks
+1. Make it work with numbers... Replace colours with Numbers... Ids.
+1. Assign cell to the board instead of numbers. 
+1. Work on the API
+1. Work on the tests
+1. Do the UI
+1. Optimise Algorithm
+1. Generate Random Board
  
 
 
