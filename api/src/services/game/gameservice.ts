@@ -1,158 +1,169 @@
 
+///////////////////////////////////////////////////////////////////////////
+export type Dict = { [key: string]: number };
+export interface ChosenColours {
+    colourNo1: string;
+    colourNo2: string;
+    coloursHashTable: Dict;
+}
+let chosenColours: ChosenColours;
+export interface NewBoardDetails {
+    newBoard: string[][];
+    maxJ: number;
+}
+export interface TileMarkDetails {
+    markedCount: number;
+    maxJ: number;
+}
+const colourMovesArr: string[] = [];
+///////////////////////////////////////////////////////////////////////////
+
+export const getMostPopularColorInColumnAlgo = (board: string[][], coloursHashTable: Dict, col: number): ChosenColours => {
+    let tempBoard: string[][] = [];
+    tempBoard = [...board];
+    let tempboard4 = [...board];
+    coloursHashTable = {};
+    for (let i = 0; i < board.length; i++) {
+        let colour = tempboard4[i][col];
+        if (coloursHashTable[colour] == undefined) {
+            coloursHashTable[colour] = 1;
+        }
+        else {
+            coloursHashTable[colour] += 1;
+        }
+    }
+    chosenColours = getChosenColorsAlgo(coloursHashTable);
+    return chosenColours;
+}
 
 
-
-const traverseCountRec = (board: string[][], i: number, j: number, color: string, count: number): number => {
+let tileMarkDetails: TileMarkDetails = {
+    markedCount: 0,
+    maxJ: 0
+}
+export const markConnTilesByColourAlgo = (board: string[][], i: number, j: number, color: string, count: number, maxJ: number): TileMarkDetails => {
     if (board[i][j] == color) {
         count = count + 1;
-        board[i][j]='X';
+        board[i][j] = 'X';
+        tileMarkDetails.maxJ = j > tileMarkDetails.maxJ ? j : tileMarkDetails.maxJ;
+        tileMarkDetails.markedCount = count;
 
         if (j < board[0].length - 1) {
-            //console.log("j+1- right"+j);
-            count = traverseCountRec(board, i, j + 1, color, count);
+            tileMarkDetails = markConnTilesByColourAlgo(board, i, j + 1, color, count, maxJ);
         }
         if (j >= 1) {
-            //console.log("j-1 : left"+j);
-            count = traverseCountRec(board, i, j - 1, color, count);
+            tileMarkDetails = markConnTilesByColourAlgo(board, i, j - 1, color, count, maxJ);
         }
         if (i < board.length - 1) {
-            //console.log(" MATCHES - i+1 : down "+i+"-"+i+1);
-            count = traverseCountRec(board, i + 1, j, color,count);
+            tileMarkDetails = markConnTilesByColourAlgo(board, i + 1, j, color, count, maxJ);
         }
 
         if (i >= 1) {
-            //console.log("i-1 : up"+i);
-            count = traverseCountRec(board, i - 1, j, color, count);
-        }  
-    }
-    else{
-        if (i < board.length - 1 && j==0) {
-            //console.log(" no match - i+1 : down "+i+"-"+(i+1));
-            count = traverseCountRec(board, i + 1, j, color, count);
+            tileMarkDetails = markConnTilesByColourAlgo(board, i - 1, j, color, count, maxJ);
         }
     }
-    return count;
+    else {
+        if (i < board.length - 1 && j == 0) {
+            tileMarkDetails = markConnTilesByColourAlgo(board, i + 1, j, color, count, maxJ);
+        }
+    }
+    return tileMarkDetails;
+}
+export const getChosenColorsAlgo = (coloursHashTable: Dict): ChosenColours => {
+    const dict_sorted = sortDictionary(coloursHashTable);
+    chosenColours = {
+        colourNo1: dict_sorted[0] == undefined ? "" : String(dict_sorted[0][0]),
+        colourNo2: dict_sorted[1] == undefined ? "" : String(dict_sorted[1][0]),
+        coloursHashTable: coloursHashTable
+    }
+    return chosenColours;
+}
+export const sortDictionary = (dict: Dict): (string | number)[][] => {
+    // Create items array
+    const items = Object.keys(dict).map(function (key) {
+        return [key, dict[key]];
+    });
+
+    // Sort the array based on the second element
+    items.sort(function (first: (string | number)[], second: (string | number)[]): number {
+        // return second[1] - first[1];
+        return new Number(second[1]).valueOf() - new Number(first[1]).valueOf();
+    });
+    //console.log(items);
+    return items;
 }
 
-const colourMovesArr : string[] =[];
-const nextBoard = (board: string[][], newColor: string): string[][] => {
+
+export const nextBoardAlgo = (board: string[][], currColor: string, newColor: string): NewBoardDetails => {
     let newBoard: string[][] = [];
     newBoard = [...board];
-    for(let i=0;i <newBoard.length;i++){
-        for(let j=0;j<newBoard[i].length;j++){
-            if(newBoard[i][j]=='X'){
-                newBoard[i][j]=newColor;                
+    let maxJ = 0;
+    for (let i = 0; i < newBoard.length; i++) {
+        for (let j = 0; j < newBoard[i].length; j++) {
+            if (newBoard[i][j] == 'X') {
+                newBoard[i][j] = newColor;
+                if (j > maxJ) {
+                    maxJ = j;
+                }
             }
         }
     }
     colourMovesArr.push(newColor);
-    return newBoard;
+    return { newBoard, maxJ };
+}
+export const finalBoardAlgo = (board: string[][], coloursHashTable: Dict): string[][] => {
+    let tempBoard: string[][] = [];
+    tempBoard = [...board];
+    const cols = tempBoard[0].length;
+    let newBoardDetails: NewBoardDetails = {
+        newBoard: tempBoard,
+        maxJ: 0
+    };
+    let markDetails: TileMarkDetails;
+    let col = 0;
+    let k = 0;
+    let previousColour1 = "";
+    let firstloop = true;
+    console.log("Original Board:");
+    console.log(board);
+    while (k < board[0].length) {
+        chosenColours = getMostPopularColorInColumnAlgo(tempBoard, coloursHashTable, k);
+
+        if (chosenColours.coloursHashTable[chosenColours.colourNo1] == board.length) {
+            k += 1;
+            continue;
+        }
+        if (firstloop)
+            markDetails = markConnTilesByColourAlgo(tempBoard, 0, col, chosenColours.colourNo2, 0, 0);
+        else
+            markDetails = markConnTilesByColourAlgo(tempBoard, 0, col, previousColour1, 0, 0);
+        firstloop = false;
+        if (previousColour1 == chosenColours.colourNo1)
+        {
+            newBoardDetails = nextBoardAlgo(tempBoard, "", chosenColours.colourNo2);
+            previousColour1 = chosenColours.colourNo2;
+        }            
+        else
+        {
+            newBoardDetails = nextBoardAlgo(tempBoard, "", chosenColours.colourNo1);
+            previousColour1 = chosenColours.colourNo1;
+        }
+            
+       
+        console.log("Colour Chosen: "+previousColour1)
+        console.log("New Board: ");
+        console.log(newBoardDetails);
+
+        if (k == board[0].length - 1) {
+            k = 0;
+        }
+        else {
+            k += 1;
+        }
+    }
+
+    return newBoardDetails.newBoard;
 }
 
-type Dict = { [key: string]: number };
-const coloursHashTable: Dict = {};
-coloursHashTable['1'] = 0;
-coloursHashTable['2'] = 0;
-coloursHashTable['3'] = 0;
-//console.log(Object.keys(coloursHashTable).length);
-//console.log(coloursHashTable['foo']);
-//console.log(Object.keys(coloursHashTable)[2]);
-
-/* const board = [['1','2','1','3','1','2'],
-['3','1','3','2','3','2'],
-['3','3','2','3','3','3'],
-['3','2','1','3','1','2'],
-['3','2','1','2','2','2'],
-['1','3','1','2','3','1']
-]; */
 
 
-/* const board = [['1', '1', '3'],
-   ['1', '2', '2'],
-    ['2', '2', '2']
-]; */
-
-const board = [
-    ['1','2','1'],
-['3','1','3'],
-['3','3','2'],
-['3','2','1']
-];
-console.log(board);
-
-
-const originConnectionsHashTable: Dict = {};
-const tempboard =[...board];
-
-let w = tempboard.length;
- //for(let i=0;i<w;i++){
-
-/*     const colour = tempboard[0][0];
-    
-    const count = traverseCountRec(tempboard, 0, 0, colour,0);
-    originConnectionsHashTable[colour] =count; */
-//} 
-/* const colour2 = tempboard[2][0];
-const count2 = traverseCountRec(tempboard, 0, 0, colour2,0);
-originConnectionsHashTable[colour] =count2;
-console.log(board);
-console.log(originConnectionsHashTable); */
-/*  for(let i = 0;i< Object.keys(coloursHashTable).length;i++)
-{
-    let colour = Object.keys(coloursHashTable)[i];
-    const tempboard =[...board];
-    let count = traverseCountRec(tempboard, 0, 0, colour,0);
-    coloursHashTable[colour] =count;
-}  */
-
-/* let colour = '3';
-const tempboard2 =[...board];
-let count = traverseCountRec(tempboard2, 0, 0, colour,0);
-coloursHashTable[colour] =count; */
-//console.log(tempboard2);
-//console.log(coloursHashTable);
-
-for(let i=0;i<3;i++){
-    let tempboard4 =[...board];
-    let colour = Object.keys(coloursHashTable)[i];
-    console.log("colour:"+colour);
-    console.log("before");
-    console.log(tempboard4);
-    let count = traverseCountRec(tempboard4, 0, 0, colour,0);
-    console.log("after");
-    console.log("colour - "+ colour+" - count :"+count);
-    coloursHashTable[colour] =count;
-    
-    console.log(tempboard4);
-    console.log(coloursHashTable);
-    let colourForMaxCount = Object.keys(coloursHashTable).reduce((a, b) => coloursHashTable[a] > coloursHashTable[b] ? a : b);
-    
-    console.log("colourHavingMax"+colourForMaxCount);
-    console.log(coloursHashTable);
-    coloursHashTable[colourForMaxCount]=0;
-    console.log(coloursHashTable);
-    let  colourForSecondMaxCount = Object.keys(coloursHashTable).reduce((a, b) => coloursHashTable[a] > coloursHashTable[b] ? a : b);
-    console.log("colourHavingSEdonMax"+colourForSecondMaxCount);
-    
-
-
-}
-let colourForMaxCount = Object.keys(coloursHashTable).reduce((a, b) => coloursHashTable[a] > coloursHashTable[b] ? a : b);
-    
-console.log("colourHavingMax"+colourForMaxCount);
-console.log(coloursHashTable);
-coloursHashTable[colourForMaxCount]=0;
-console.log(coloursHashTable);
-let  colourForSecondMaxCount = Object.keys(coloursHashTable).reduce((a, b) => coloursHashTable[a] > coloursHashTable[b] ? a : b);
-console.log("colourHavingSEdonMax"+colourForSecondMaxCount);
-
-
-console.log(nextBoard(board,colourForSecondMaxCount));
-
-/* const list = [
-    { color: 'white', size: 'XXL' },
-    { color: 'red', size: 'XL' },
-    { color: 'black', size: 'M' }
-  ]
-  list.sort((a, b) => (a.color > b.color) ? 1 : -1)
-  console.log(list); */
