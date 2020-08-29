@@ -29,24 +29,30 @@ npm run start-dev
 ```
 cd api
 npm run start-dev
+npm run test
 ```
 
 ### Project Plan 
 1. Get the Initial MERN Stack folders right
+1. Bruteforce Algorithm for Game Backend
 1. Api
 1. TDD
-1. Algorithm
 1. More Tests
 1. Improve Docker to add the other services. 
 1. React
+1. Optimise Game Backend Algorithm
+
+#### Bruteforce Algorithm for Game Backend
+1. 
 
 ### Detailed Tasks
+
 1. Make it work with numbers... Replace colours with Numbers... Ids.
 1. Assign cell to the board instead of numbers. 
 1. Work on the API
 1. Work on the tests
 1. Do the UI
-1. Optimise Algorithm
+1. Optimise Algorithm from Bruteforce Algorithm
 1. Generate Random Board
 
  
