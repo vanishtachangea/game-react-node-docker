@@ -111,6 +111,14 @@ export const nextBoardAlgo = (board: string[][], currColor: string, newColor: st
     colourMovesArr.push(newColor);
     return { newBoard, maxJ };
 }
+export const nextMove=(board:string[][], coloursHashTable: Dict, colour1:string, colour2:string): string[][] =>{
+    let tempBoard: string[][] = [];
+    tempBoard = [...board];
+    const col =0;
+    const markDetails= markConnTilesByColourAlgo(tempBoard, 0, col, colour2, 0, 0);
+    const newBoardDetails = nextBoardAlgo(tempBoard, "", colour1);
+    return newBoardDetails.newBoard;  
+}
 export const finalBoardAlgo = (board: string[][], coloursHashTable: Dict): string[][] => {
     let tempBoard: string[][] = [];
     tempBoard = [...board];
