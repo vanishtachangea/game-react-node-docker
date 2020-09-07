@@ -19,7 +19,7 @@ class Game implements IGame {
 
     }
     public allAIMoves(iplayable:IPlayable, colour:string):void{
-        GameServicesClass.getfinalBoard(iplayable);
+      //  GameServicesClass.getfinalBoard(iplayable);
     }
 }
 

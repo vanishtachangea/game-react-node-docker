@@ -12,11 +12,10 @@ class RootController {
     @get('/')
     @use(logger)
     getRoot(req: Request, res: Response) {
-        console.log("inside get");
         res.send(`
             <div>
             <div>Welcome to a very Popular Game</div>
-            <a href="/board">Start Game</a>
+            <a href="/game/board">Start Game</a>
             <div>brought to you by Everreal</div>
             </div>
             `)

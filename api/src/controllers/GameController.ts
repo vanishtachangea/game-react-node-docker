@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { get, controller, use, bodyValidator, post } from './decorators';
+import Board from '../entities/Board';
+import IPlayable from '../entities/Playable';
+import GameServicesClass from '../services/game/GameServicesClass';
 
 function logger(req: Request, res: Response, next: NextFunction) {
     console.log('Request has been made');
@@ -13,19 +16,36 @@ class GameController {
     @get('/board')
     @use(logger)
     getBoard(req: Request, res: Response): void {
+        console.log("bd inside GetBoard Game controller");
+        let bd: IPlayable = new Board(2, 2);
+        console.log("Before calling Get final Board");
+        for (let i = 0; i < bd.tiles.length; i++) {
+            for (let j = 0; j < bd.tiles[i].length; j++) {
+                console.log("("+i+","+j+") "+bd.tiles[i][j].colour);
+            }
+        }
+        //console.log(bd);
+
+
+        let gameService = new GameServicesClass(bd);
+       
+        bd = gameService.getfinalBoard();
+        console.log("After calling Get final Board");
+        //console.log(bd);
+        for (let i = 0; i < bd.tiles.length; i++) {
+            for (let j = 0; j < bd.tiles[i].length; j++) {
+                console.log(bd.tiles[i][j].colour);
+            }
+        }
         res.send(`
         <form method="POST">
-            <div>
-                <label>Email</label>
-                <input name="email"/>
-            </div>
-            <div>
-                <label>Password</label>
-                <input name="password" type="password"/>
-            </div>
-            <button>Submit</button>
+ <div>
+      
+      </div>
+            <button>Play</button>
         </form>
        `)
+
     }
 
     @post('/board')

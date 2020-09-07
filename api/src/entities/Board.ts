@@ -1,44 +1,54 @@
 import Tile, { ITile } from './Tile';
-import {Dict} from './types';
-import {IPlayable} from './Playable';
+import { Dict } from './types';
+import { IPlayable } from './Playable';
 export interface IBoard {
     rows: number;
     columns: number;
     tiles: ITile[][];
-    
+
 }
 
-class Board implements IBoard , IPlayable{
+class Board implements IBoard, IPlayable {
 
-    public rows: number;
-    public columns: number;
-    public tiles: ITile[][];
-    public initialBoard: IBoard;
+    public rows: number = 0;
+    public columns: number = 0;
+    public tiles: ITile[][] = [];
+    //public initialBoard: IBoard;
     //public boardTransitions: { chosenColour: string, newBoard: IBoard }[];
-    public colourPalette:string[]=[];
-    public boardTransitions: { chosenColour: string, newBoard: IBoard }[]=[];
-    public coloursHashTable: Dict= {};
-    constructor(rows: number, columns: number, tiles: ITile[][], colourPalette:string[]) {
+
+    //public boardTransitions: { chosenColour: string, board: IPlayable }[] = [];
+    //public colourPalette: string[] = ["#fb1700", "#f8dd7d", "#95c4cc"];
+    public colourPalette: string[] = ["red", "blue", "green"];
+    public coloursHashTable: Dict = {};
+    constructor(rows: number, columns: number, tiles?: ITile[][], colourPalette?: string[]) {
         this.rows = rows;
         this.columns = columns
-        this.tiles = tiles;
-        this.colourPalette = colourPalette; 
-        this.initialBoard=this;      
+        if (tiles) {
+            this.tiles = tiles;
+        }
+
+        if (colourPalette) {
+            this.colourPalette = colourPalette;
+        }
+        this.NewBoard();
+        //this.initialBoard = this;
     }
-    public NewBoard():void{
-        let id:number=1;
-        for(let i =0;i<this.rows;i++)
-        {
-            for(let j=0;j<this.columns;j++)
-            {
-                this.tiles[i][j]= new Tile(String(id++),this.getRandomArrayItem(this.colourPalette),i,j);
+    public NewBoard(): void {
+        let id: number = 1;
+
+        this.tiles = new Array();
+
+        if (this.rows > 0 && this.columns > 0) {
+            for (var i = 0; i < this.rows; i++) {
+                this.tiles[i] = new Array();
+                for (var j = 0; j < this.columns; j++) {
+                    this.tiles[i][j] = new Tile(String(id++), this.getRandomArrayItem(this.colourPalette), i, j);
+                }
             }
         }
-        this.initialBoard = this;
     }
-    private getRandomArrayItem(items:string[])
-    {
-        return items[Math.floor(Math.random()*items.length)];
+    private getRandomArrayItem(items: string[]) {
+        return items[Math.floor(Math.random() * items.length)];
     }
 }
 
