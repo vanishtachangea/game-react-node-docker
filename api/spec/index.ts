@@ -46,6 +46,7 @@ jasmine.onComplete((passed: boolean) => {
 // Run all or a single unit-test
 if (options.testFile) {
     const testFile = options.testFile;
+    //console.log("testFile"+testFile);
     find.file(testFile + '.spec.ts', './spec', (files) => {
         if (files.length === 1) {
             jasmine.specFiles = [files[0]];
