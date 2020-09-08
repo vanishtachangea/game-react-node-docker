@@ -7,7 +7,7 @@ export interface IPlayable {
     colourPalette:string[];
     tiles :ITile[][];
     //boardTransitions: { chosenColour: string, board: IPlayable }[];
-    NewBoard():void;   
+    newBoard():void;   
     coloursHashTable: Dict; 
 }
 export default IPlayable;
