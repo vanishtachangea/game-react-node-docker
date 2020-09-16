@@ -4,12 +4,12 @@ import { Response, SuperTest, Test } from 'supertest';
 
 //import app from '@server';
 //import app from '../src/Server';
-import app from 'src/index';
+import app from '../src/index';
 //import { pErr } from '@shared/functions';
 //import { paramMissingError } from '@shared/constants';
 import Board from '../src/entities/Board';
 import IPlayable from '../src/entities/Playable';
-import GameServicesClass from 'src/services/game/GameServicesClass';
+import GameServicesClass from '../src/services/game/GameServicesClass';
 
 describe('Game Tests', () => {
 

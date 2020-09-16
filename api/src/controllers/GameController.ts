@@ -35,7 +35,7 @@ class GameController {
             }
         } */
         console.log("heeeeeeeeeeeeeeeeeelo");
-        let initialBoard: Board = new Board(2,2);
+        let initialBoard: Board = new Board(6,7);
         //initialBoard.testBoard();
         // for (let i = 0; i < initialBoard.tiles.length; i++) {
         //     for (let j = 0; j < initialBoard.tiles[i].length; j++) {

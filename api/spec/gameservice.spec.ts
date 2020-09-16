@@ -2,9 +2,10 @@ import supertest from 'supertest';
 import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
 import { Response, SuperTest, Test } from 'supertest';
 
-//import app from '@server';
+import app from '../src/index';
+//import app from '@server'
 //import app from '../src/Server';
-import app from 'src/index';
+//import app from 'src/index';
 //import { pErr } from '@shared/functions';
 //import { paramMissingError } from '@shared/constants';
 import { ChosenColours, finalBoardAlgo, Dict, nextMove } from '../src/services/game/gameservice';

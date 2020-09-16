@@ -16,7 +16,7 @@ class RootController {
             <div>
             <div>Welcome to a very Popular Game</div>
             <a href="/game/board">Start Game</a>
-            <div>brought to you by Everreal</div>
+            <div>brought to you by Everreal!!!</div>
             </div>
             `)
 
